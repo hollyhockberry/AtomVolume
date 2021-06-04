@@ -6,6 +6,7 @@
 #include <M5Atom.h>
 #include <BleKeyboard.h>
 #include "chatterremover.h"
+#include "keys.h"
 
 namespace {
 BleKeyboard bleyKeyBoard("AtomVolume");
@@ -25,9 +26,13 @@ bool isPressSW() {
   }
   return false;
 }
+
+int mode = 0;
 }  // namespace
 
 void setup() {
+  M5.begin(true, false, true);
+  M5.dis.begin(1);
   bleyKeyBoard.begin();
   A.begin();
   B.begin();
@@ -37,16 +42,22 @@ void setup() {
 }
 
 void loop() {
+  M5.update();
+  if (M5.Btn.wasPressed()) {
+    mode = (mode + 1) % IKeys::Keys();
+  }
+
   if (bleyKeyBoard.isConnected()) {
+    auto keys = IKeys::KeyTable()[mode];
     const auto a = A.read();
     const auto b = B.read();
     if (a != lastA) {
       const auto cw = b != a;
       lastA = a;
-      bleyKeyBoard.write(cw ? KEY_MEDIA_VOLUME_UP : KEY_MEDIA_VOLUME_DOWN);
+      cw ? keys->CW(&bleyKeyBoard) : keys->CCW(&bleyKeyBoard);
     }
     if (isPressSW()) {
-      bleyKeyBoard.write(KEY_MEDIA_MUTE);
+      keys->Switch(&bleyKeyBoard);
     }
   }
 }
