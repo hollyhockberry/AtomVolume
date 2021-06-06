@@ -33,18 +33,21 @@ int mode = 0;
 void setup() {
   M5.begin(true, false, true);
   M5.dis.begin(1);
+  M5.dis.drawpix(0, 0xff0000);
   bleyKeyBoard.begin();
   A.begin();
   B.begin();
   SW.begin();
   lastA = A.read();
   lastSW = SW.read();
+  IKeys::KeyTable()[mode]->Show(&M5.dis);
 }
 
 void loop() {
   M5.update();
   if (M5.Btn.wasPressed()) {
     mode = (mode + 1) % IKeys::Keys();
+    IKeys::KeyTable()[mode]->Show(&M5.dis);
   }
 
   if (bleyKeyBoard.isConnected()) {

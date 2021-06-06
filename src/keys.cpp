@@ -13,6 +13,9 @@ class VolumeKeys : public IKeys {
   void Switch(BleKeyboard* key) const override {
     key->write(KEY_MEDIA_MUTE);
   }
+  void Show(LED_DisPlay* dis) const override {
+    dis->drawpix(0, 0xff0000);
+  }
 };
 
 class MediaKeys : public IKeys {
@@ -26,6 +29,9 @@ class MediaKeys : public IKeys {
   void Switch(BleKeyboard* key) const override {
     key->write(KEY_MEDIA_PLAY_PAUSE);
   }
+  void Show(LED_DisPlay* dis) const override {
+    dis->drawpix(0, 0xff00);
+  }
 };
 
 class YoutubeKeys : public IKeys {
@@ -38,6 +44,9 @@ class YoutubeKeys : public IKeys {
   }
   void Switch(BleKeyboard* key) const override {
     key->write(' ');
+  }
+  void Show(LED_DisPlay* dis) const override {
+    dis->drawpix(0, 0xff);
   }
 };
 
